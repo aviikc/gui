@@ -2,8 +2,7 @@ from PyQt5.QtWidgets import QWidget, QApplication, QComboBox, QMessageBox
 from PyQt5 import uic
 from PyQt5.QtCore import pyqtSlot
 import sys
-from configparser import ConfigParser
-import Temp_convert
+
 
 
 convert_options = ["Celcius to Farenheit", "Celcius to Kelvin", "Farenheit to Celcius", "Farenheit to Kelvin", "Kelvin to Celcius", "Kelvin to Farenheit"]
