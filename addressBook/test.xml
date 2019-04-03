@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<testconditions>
+    <humanAddress>
+        <firsName>
+                Avik
+        </firsName>
+
+        <lastName>
+                Chakraborty
+        </lastName>
+        
+        <mobileNumber>
+                9967369456
+        </mobileNumber>
+
+        <email>
+            avik.c@whistlingwoods.net
+        </email>
+
+        <address>
+            Raheja Exotica, Madh Island, Mumbai-400097
+        </address>
+        
+    </humanAddress>
+</testconditions>
