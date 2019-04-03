@@ -1,19 +1,32 @@
-from PyQt5.QtWidgets import QWidget,QDialog, QMainWindow, QApplication, QMessageBox, QFileDialog,QDialogButtonBox, QTableWidgetItem, QCheckBox, QButtonGroup, QComboBox
-from PyQt5.QtGui import QFileOpenEvent, QPalette
+from PyQt5.QtWidgets import (
+                            QWidget,QDialog, 
+                            QMainWindow, QApplication, 
+                            QMessageBox, QFileDialog,
+                            QDialogButtonBox, QTableWidgetItem, 
+                            QCheckBox, QButtonGroup, QComboBox
+                        )
+from PyQt5.QtGui import QFileOpenEvent, QPalette, QStandardItem
 # from PyQt5.QtCore import pyqtSlot, pyqtSignal, Qt, QRunnable, QThreadPool, QObject
-import sys
+import sys, os
 
 
 from Ui_main_diag import *
 from Ui_add_new_dialg import *
 import Ui_commerce
+from database import init_db
+
+from database import db_session
+from contacts import Contact
+from commerces import Commerce
 
 
-from db_model import *
+# def check_dbfile():
+#     os.chdir(os.path.dirname(__file__))
+#     cwd = os.getcwd()
+#     exists = os.path.isfile(cwd + '/tmp/test.db')
+#     return exists    
 
-
-
-
+# print(check_dbfile())
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -21,7 +34,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
         self.pushButton_addCon.clicked.connect(self.setup_contact)
-        # self.pushButton_addComm.clicked.connect(self.setup_commerce)
+        self.contact = Contact(self)
+        self.contacts = self.contact.query.all()
+        self.populateList(self.contacts)
+
+
+    def populateList(self, contact_list):
+        for i,row in enumerate(self.contacts):
+            self.listWidget.addItem(row.first_name + " " + row.last_name + "Phone: " + row.mobile_number)
+
 
     def setup_contact(self):
         self.project = ContactWindow(parent=self)
@@ -59,7 +80,11 @@ class ContactWindow(QtWidgets.QDialog, Ui_Dialog):
         address = self.textEdit.toPlainText()
         # print(address)
         # print(type(address))
-        Contact.insert_data(self, fName, lName, email, mobile, address)
+        # data_holder = Contact()
+        cont = Contact(fName, lName, email, mobile, address)
+        db_session.add(cont)
+        db_session.commit()
+        
         print("human contact added to db")
         self.close()
 
@@ -76,7 +101,17 @@ class ContactWindow(QtWidgets.QDialog, Ui_Dialog):
 #         self.close()
 
 if __name__ == '__main__':
+    print("")
     app = QApplication(sys.argv)
     frame = MainWindow()
     frame.show()
     sys.exit(app.exec_())
+    # print(check_dbfile())
+    # if check_dbfile():
+    #     from database import db_session
+    #     print("yo")
+    # else:
+    #     os.mkdir(os.getcwd()+'tmp')
+    #     from database import init_db
+    # init_db()
+    #     from database import db_session
